@@ -1,4 +1,5 @@
-1) Effectuer la commande suivante xxxxx. Connecter ensuite un périphérique USB. Déconnecter enfin ce périphérique. Que remarquez-vous? 
+1) a) Effectuer la commande suivante xxxxx. Connecter ensuite un périphérique USB. Déconnecter enfin ce périphérique. Que remarquez-vous? 
+   b) Reconnecter la clé USB et naviguer dans le dossier /sys/block/sdb/. Qu'en déduisez-vous par rapport à la commande de la question précédente? 
 
 2) Etablir une règle udev afin de copier le contenu de n'importe quelle périphérique USB qui se connecte à la 
    machine. 
