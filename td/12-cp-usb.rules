@@ -1,0 +1,4 @@
+#KERNEL=="sd[a-z][0-9]", ACTION=="add", RUN+="/usr/bin/at -M -f /home/clement/Desktop/cp_usb.sh now"
+#ACTION=="add", SUBSYSTEMS=="usb", SUBSYSTEM=="block",  RUN+="/home/clement/Desktop/cp_usb.sh", RUN+="/bin/sh -c 'bin/echo backup >> /home/clement/Desktop/'"
+
+#KERNEL=="sd[a-z][0-9]", ACTION=="add", SUBSYSTEMS=="usb", RUN+="/bin/sh -c 'bin/echo backup >> /home/clement/Desktop/effet.txt'", RUN+="/home/clement/Desktop/cp_usb.sh"
