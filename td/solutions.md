@@ -594,6 +594,43 @@ new_log="${date_log} - $2 $5 $3 : $4"
 # Ecriture de la ligne dans le fichier de log
 echo $new_log >> $1 
 
+    e) Etablir une règle udev qui réalise les questions 2)a) à 2)d) sans passer par un script (indice : utiliser "echo").
+
+# Regle permettant de creer un fichier de log pour l'administration #
+
+# Declaration de path_device_log representant le chemin du fichier de log
+ENV{path_device_log}="/usr/local/etc/log/device-v2.log"
+
+# Ajout d'une ligne dans le fichier de log lors de l'ajout d'une nouvelle partition ou d'un disque dur externe
+KERNEL=="sd[a-z][0-9]", SUBSYSTEM=="USB", ACTION=="add", PROGRAM="/usr/bin/date", RUN+="/bin/sh -c 'bin/echo %c - %E{ID_FS_LABEL} %E{ID_SERIAL} %k : connexion >> %E{path_device_log}'"
+
+# Ajout d'une ligne dans le fichier de log lors de la suppression d'une partition ou d'un disque dur externe
+KERNEL=="sd[a-z][0-9]", SUBSYSTEM=="USB", ACTION=="remove", PROGRAM="/usr/bin/date", RUN+="/bin/sh -c 'bin/echo %c - %E{ID_FS_LABEL} %E{ID_SERIAL} %k : deconnexion >> %E{path_device_log}'"
+
+3) Sur certaines versions de linux, lorsque l'on connecte un périphérique USB, un point de montage 
+   est automatiquement créé dans /home/usr/Desktop/. Faites de même avec une règle udev. 
+   (Indice : utiliser /usr/bin/systemd-mount au lieu de /usr/bin/mount https://wiki.archlinux.org/index.php/Udev)
+
+# Montage automatique vers /home/user/Desktop/
+
+# Importation de certains attributs du peripherique par le biais de la commande "blkid"
+IMPORT{program}="/sbin/blkid -o udev -p %N"
+  
+# Creation d'une variable "name" qui representera le nom du futur point de montage
+ENV{ID_FS_LABEL}!="", ENV{name}="%E{ID_FS_LABEL}"  
+ENV{ID_FS_LABEL}=="", ENV{name}="usb%k"
+ENV{path_mount}="/home/user/Desktop/%E{name}"
+
+# Creation du point de montage dans le dossier /home/user/Desktop
+KERNEL=="sd[a-z][0-9]", ACTION=="add", SUBSYSTEMS=="usb", SUBSYSTEM=="block", ENV{ID_FS_USAGE}=="filesystem", RUN+="/bin/mkdir -p %E{path_mount}", RUN{program}+="/usr/bin/systemd-mount --no-block --automount=yes --collect $devnode %E{path_mount}"
+  
+# Demontage et suppression du point de montage
+KERNEL=="sd[a-z][0-9]", ACTION=="remove", RUN{program}+="/usr/bin/systemd-umount $devnode %E{path_mount}", RUN+="/bin/rmdir %E{path_mount}"
+
+  
+
+ 
+
     
 
 

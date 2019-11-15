@@ -1,0 +1,11 @@
+# Regle permettant de creer un fichier de log pour l'administration #
+
+# Declaration de path_device_log representant le chemin du fichier de log
+ENV{path_device_log}="/usr/local/etc/log/device-v2.log"
+
+# Ajout d'une ligne dans le fichier de log lors de l'ajout d'une nouvelle partition ou d'un disque dur externe
+KERNEL=="sd[a-z][0-9]", SUBSYSTEM=="USB", ACTION=="add", PROGRAM="/usr/bin/date", RUN+="/bin/sh -c 'bin/echo %c - %E{ID_FS_LABEL} %E{ID_SERIAL} %k : connexion >> %E{path_device_log}'"
+
+# Ajout d'une ligne dans le fichier de log lors de la suppression d'une partition ou d'un disque dur externe
+KERNEL=="sd[a-z][0-9]", SUBSYSTEM=="USB", ACTION=="remove", PROGRAM="/usr/bin/date", RUN+="/bin/sh -c 'bin/echo %c - %E{ID_FS_LABEL} %E{ID_SERIAL} %k : deconnexion >> %E{path_device_log}'"
+
