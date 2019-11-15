@@ -1,4 +1,10 @@
-1) udevadm monitor -k -p
+1) a) Effectuer la commande suivante "udevadm monitor -k -p". Connecter ensuite un périphérique USB. Déconnecter enfin ce périphérique. Que remarquez-vous? 
+   b) Reconnecter la clé USB et exécuter la commande "udevadm info -a -p /sys/block/sdb". Qu'en déduisez-vous par rapport à la commande de la question précédente? 
+   c) Faire la commande "df -h" et retrouver avec le système de fichiers associé à la clé USB. 
+      Parcourir le dossier /sys/block/sd[a-z] en fonction de ce que vous avez trouvé à la question précédente. Que remarquez-vous? 
+   d) Effectuer la commande "sudo /sbin/blkid -o udev -p /dev/sdb1". 
+
+a) udevadm monitor -k -p
 monitor will print the received events for:
 KERNEL - the kernel uevent
 
@@ -289,7 +295,9 @@ SEQNUM=2486
 MAJOR=189
 MINOR=26
 
-2) udevadm info -a -p /sys/block/sdb
+La commande permet de détecter la connexion ou la déconnexion de n'importe quel périphérique. C'est bien udev qui gère les périphériques.
+
+b) udevadm info -a -p /sys/block/sdb
 
 Udevadm info starts with the device specified by the devpath and then
 walks up the chain of parent devices. It prints for every device
@@ -474,203 +482,80 @@ and the attributes from one single parent device.
     SUBSYSTEMS==""
     DRIVERS==""
 
-------------------------------
+Quand on veut les informations d'un périphérique déjà connecté, on utilise cette commande. Elle permet de visualiser certains attributs. 
+Ces attributs sont des attributs générés par sysfs. Sysfs est un système de fichiers virtuel qui va récupérer les attributs de chaque périphérique et créer leurs 
+attributs correspondants. Dans les questions suivantes, on pourra visualiser où ces attributs sont créés.
 
-udevadm info -a -p $(udevadm info -q path -n /dev/sdb1)
+c) 
+df -h
+Sys. de fichiers Taille Utilisé Dispo Uti% Monté sur
+udev               487M       0  487M   0% /dev
+tmpfs              101M    6,1M   95M   7% /run
+/dev/sda1          7,0G    2,8G  3,8G  43% /
+tmpfs              502M       0  502M   0% /dev/shm
+tmpfs              5,0M       0  5,0M   0% /run/lock
+tmpfs              502M       0  502M   0% /sys/fs/cgroup
+/dev/sda3           89M    1,6M   81M   2% /home/clement/Bureau/key
+tmpfs              101M     12K  101M   1% /run/user/1000
+/dev/sdb1          2,0G     28M  2,0G   2% /media/clement/CAUMES
 
-Udevadm info starts with the device specified by the devpath and then
-walks up the chain of parent devices. It prints for every device
-found, all possible attributes in the udev rules key format.
-A rule to match, can be composed by the attributes of the device
-and the attributes from one single parent device.
+clement@Debian-ex:$ cd /sys/block/sdb
+clement@Debian-ex:/sys/block/sdb$ ls
+alignment_offset  discard_alignment  hidden     power      sdb1       trace
+bdi               events             holders    queue      size       uevent
+capability        events_async       inflight   range      slaves
+dev               events_poll_msecs  integrity  removable  stat
+device            ext_range          mq         ro         subsystem
+clement@Debian-ex:/sys/block/sdb$ cat size
+4104192
+clement@Debian-ex:/sys/block/sdb$ cd sdb1
+clement@Debian-ex:/sys/block/sdb/sdb1$ ls
+alignment_offset  discard_alignment  inflight   power  size   stat       trace
+dev               holders            partition  ro     start  subsystem  uevent
+clement@Debian-ex:/sys/block/sdb/sdb1$ cd ..
+clement@Debian-ex:/sys/block/sdb$ cat size
+4104192
+clement@Debian-ex:/sys/block/sdb$ ls
+alignment_offset  discard_alignment  hidden     power      sdb1       trace
+bdi               events             holders    queue      size       uevent
+capability        events_async       inflight   range      slaves
+dev               events_poll_msecs  integrity  removable  stat
+device            ext_range          mq         ro         subsystem
+clement@Debian-ex:/sys/block/sdb$ cd sdb1
+clement@Debian-ex:/sys/block/sdb/sdb1$ ls
+alignment_offset  discard_alignment  inflight   power  size   stat       trace
+dev               holders            partition  ro     start  subsystem  uevent
+clement@Debian-ex:/sys/block/sdb/sdb1$ cat partition 
+1
+clement@Debian-ex:/sys/block/sdb/sdb1$ 
 
-  looking at device '//devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb/sdb1':
-    KERNEL=="sdb1"
-    SUBSYSTEM=="block"
-    DRIVER==""
-    ATTR{size}=="4104160"
-    ATTR{inflight}=="       0        0"
-    ATTR{partition}=="1"
-    ATTR{stat}=="     128      242     4453     2109        0        0        0        0        0     1672     1672        0        0        0        0"
-    ATTR{start}=="32"
-    ATTR{ro}=="0"
-    ATTR{alignment_offset}=="0"
-    ATTR{discard_alignment}=="0"
+On peut donc voir ici que sysfs exporte depuis l'espace noyau vers l'espace utilisateur les informations 
+sur les périphériques du système. Ainsi, il va créer un dossier associé au système de fichiers contenant une 
+suite de fichiers représentant les attributs du périphérique en question. Ainsi, c'est udev qui va 
+interpréter les fichiers générés par sysfs pour donner ces attributs à l'utilisateur. Cela permet donc 
+de créer des règles qui vont s'appliquer en fonction des attributs des périphériques. 
 
-  looking at parent device '//devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb':
-    KERNELS=="sdb"
-    SUBSYSTEMS=="block"
-    DRIVERS==""
-    ATTRS{size}=="4104192"
-    ATTRS{capability}=="51"
-    ATTRS{hidden}=="0"
-    ATTRS{range}=="16"
-    ATTRS{ext_range}=="256"
-    ATTRS{inflight}=="       0        0"
-    ATTRS{stat}=="     134      242     4501     2175        0        0        0        0        0     1732     1732        0        0        0        0"
-    ATTRS{events}=="media_change"
-    ATTRS{removable}=="1"
-    ATTRS{events_async}==""
-    ATTRS{ro}=="0"
-    ATTRS{events_poll_msecs}=="-1"
-    ATTRS{alignment_offset}=="0"
-    ATTRS{discard_alignment}=="0"
 
-  looking at parent device '//devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0':
-    KERNELS=="3:0:0:0"
-    SUBSYSTEMS=="scsi"
-    DRIVERS=="sd"
-    ATTRS{model}=="Flash Disk      "
-    ATTRS{timeout}=="30"
-    ATTRS{evt_lun_change_reported}=="0"
-    ATTRS{scsi_level}=="3"
-    ATTRS{rev}=="5.00"
-    ATTRS{ioerr_cnt}=="0x0"
-    ATTRS{max_sectors}=="240"
-    ATTRS{state}=="running"
-    ATTRS{evt_media_change}=="0"
-    ATTRS{eh_timeout}=="10"
-    ATTRS{device_blocked}=="0"
-    ATTRS{blacklist}==""
-    ATTRS{evt_soft_threshold_reached}=="0"
-    ATTRS{evt_mode_parameter_change_reported}=="0"
-    ATTRS{type}=="0"
-    ATTRS{vendor}=="Generic "
-    ATTRS{iodone_cnt}=="0x122"
-    ATTRS{inquiry}==""
-    ATTRS{dh_state}=="detached"
-    ATTRS{evt_capacity_change_reported}=="0"
-    ATTRS{iocounterbits}=="32"
-    ATTRS{queue_type}=="none"
-    ATTRS{evt_inquiry_change_reported}=="0"
-    ATTRS{device_busy}=="0"
-    ATTRS{iorequest_cnt}=="0x122"
-    ATTRS{queue_depth}=="1"
+d) sudo /sbin/blkid -o udev -p /dev/sdb1
+ID_FS_SEC_TYPE=msdos
+ID_FS_LABEL_FATBOOT=DISK_IMG
+ID_FS_LABEL_FATBOOT_ENC=DISK_IMG
+ID_FS_LABEL=CAUMES
+ID_FS_LABEL_ENC=CAUMES
+ID_FS_UUID=009C-0E70
+ID_FS_UUID_ENC=009C-0E70
+ID_FS_VERSION=FAT16
+ID_FS_TYPE=vfat
+ID_FS_USAGE=filesystem
+ID_PART_ENTRY_SCHEME=dos
+ID_PART_ENTRY_UUID=009c0e70-01
+ID_PART_ENTRY_TYPE=0x6
+ID_PART_ENTRY_FLAGS=0x80
+ID_PART_ENTRY_NUMBER=1
+ID_PART_ENTRY_OFFSET=32
+ID_PART_ENTRY_SIZE=4104160
+ID_PART_ENTRY_DISK=8:16
 
-  looking at parent device '//devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0':
-    KERNELS=="target3:0:0"
-    SUBSYSTEMS=="scsi"
-    DRIVERS==""
+Cette commande est intéressante car elle permet de récupérer le nom de la clé notamment. 
 
-  looking at parent device '//devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3':
-    KERNELS=="host3"
-    SUBSYSTEMS=="scsi"
-    DRIVERS==""
-
-  looking at parent device '//devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0':
-    KERNELS=="1-1:1.0"
-    SUBSYSTEMS=="usb"
-    DRIVERS=="usb-storage"
-    ATTRS{authorized}=="1"
-    ATTRS{supports_autosuspend}=="1"
-    ATTRS{bNumEndpoints}=="02"
-    ATTRS{bInterfaceProtocol}=="50"
-    ATTRS{bInterfaceSubClass}=="06"
-    ATTRS{bInterfaceNumber}=="00"
-    ATTRS{bInterfaceClass}=="08"
-    ATTRS{bAlternateSetting}==" 0"
-
-  looking at parent device '//devices/pci0000:00/0000:00:0b.0/usb1/1-1':
-    KERNELS=="1-1"
-    SUBSYSTEMS=="usb"
-    DRIVERS=="usb"
-    ATTRS{ltm_capable}=="no"
-    ATTRS{bmAttributes}=="80"
-    ATTRS{idVendor}=="1e3d"
-    ATTRS{avoid_reset_quirk}=="0"
-    ATTRS{bNumInterfaces}==" 1"
-    ATTRS{bMaxPower}=="100mA"
-    ATTRS{rx_lanes}=="1"
-    ATTRS{bConfigurationValue}=="1"
-    ATTRS{product}=="Flash Disk      "
-    ATTRS{idProduct}=="2093"
-    ATTRS{bDeviceClass}=="00"
-    ATTRS{devnum}=="60"
-    ATTRS{speed}=="480"
-    ATTRS{quirks}=="0x0"
-    ATTRS{serial}=="CCCB1104231104350952973414"
-    ATTRS{busnum}=="1"
-    ATTRS{devspec}=="  (null)"
-    ATTRS{manufacturer}=="Generic "
-    ATTRS{bDeviceProtocol}=="00"
-    ATTRS{bcdDevice}=="0100"
-    ATTRS{bNumConfigurations}=="1"
-    ATTRS{bMaxPacketSize0}=="64"
-    ATTRS{devpath}=="1"
-    ATTRS{authorized}=="1"
-    ATTRS{urbnum}=="749"
-    ATTRS{maxchild}=="0"
-    ATTRS{bDeviceSubClass}=="00"
-    ATTRS{version}==" 2.00"
-    ATTRS{configuration}==""
-    ATTRS{tx_lanes}=="1"
-    ATTRS{removable}=="unknown"
-
-  looking at parent device '//devices/pci0000:00/0000:00:0b.0/usb1':
-    KERNELS=="usb1"
-    SUBSYSTEMS=="usb"
-    DRIVERS=="usb"
-    ATTRS{bConfigurationValue}=="1"
-    ATTRS{bNumInterfaces}==" 1"
-    ATTRS{bDeviceSubClass}=="00"
-    ATTRS{bMaxPacketSize0}=="64"
-    ATTRS{version}==" 2.00"
-    ATTRS{maxchild}=="12"
-    ATTRS{bmAttributes}=="e0"
-    ATTRS{bcdDevice}=="0419"
-    ATTRS{manufacturer}=="Linux 4.19.0-6-686 ehci_hcd"
-    ATTRS{configuration}==""
-    ATTRS{bMaxPower}=="0mA"
-    ATTRS{devspec}=="  (null)"
-    ATTRS{removable}=="unknown"
-    ATTRS{authorized_default}=="1"
-    ATTRS{speed}=="480"
-    ATTRS{urbnum}=="1801"
-    ATTRS{avoid_reset_quirk}=="0"
-    ATTRS{quirks}=="0x0"
-    ATTRS{interface_authorized_default}=="1"
-    ATTRS{authorized}=="1"
-    ATTRS{bDeviceClass}=="09"
-    ATTRS{devpath}=="0"
-    ATTRS{idVendor}=="1d6b"
-    ATTRS{product}=="EHCI Host Controller"
-    ATTRS{tx_lanes}=="1"
-    ATTRS{bNumConfigurations}=="1"
-    ATTRS{idProduct}=="0002"
-    ATTRS{rx_lanes}=="1"
-    ATTRS{busnum}=="1"
-    ATTRS{ltm_capable}=="no"
-    ATTRS{bDeviceProtocol}=="00"
-    ATTRS{devnum}=="1"
-    ATTRS{serial}=="0000:00:0b.0"
-
-  looking at parent device '//devices/pci0000:00/0000:00:0b.0':
-    KERNELS=="0000:00:0b.0"
-    SUBSYSTEMS=="pci"
-    DRIVERS=="ehci-pci"
-    ATTRS{device}=="0x265c"
-    ATTRS{local_cpus}=="1"
-    ATTRS{enable}=="1"
-    ATTRS{devspec}==""
-    ATTRS{subsystem_vendor}=="0x0000"
-    ATTRS{consistent_dma_mask_bits}=="32"
-    ATTRS{broken_parity_status}=="0"
-    ATTRS{dma_mask_bits}=="32"
-    ATTRS{revision}=="0x00"
-    ATTRS{vendor}=="0x8086"
-    ATTRS{msi_bus}=="1"
-    ATTRS{irq}=="9"
-    ATTRS{driver_override}=="(null)"
-    ATTRS{class}=="0x0c0320"
-    ATTRS{subsystem_device}=="0x0000"
-    ATTRS{ari_enabled}=="0"
-    ATTRS{d3cold_allowed}=="0"
-    ATTRS{uframe_periodic_max}=="100"
-    ATTRS{companion}==""
-    ATTRS{local_cpulist}=="0"
-
-  looking at parent device '//devices/pci0000:00':
-    KERNELS=="pci0000:00"
-    SUBSYSTEMS==""
-    DRIVERS==""
 

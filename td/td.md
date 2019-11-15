@@ -1,8 +1,8 @@
 1) a) Effectuer la commande suivante "udevadm monitor -k -p". Connecter ensuite un périphérique USB. Déconnecter enfin ce périphérique. Que remarquez-vous? 
    b) Reconnecter la clé USB et exécuter la commande "udevadm info -a -p /sys/block/sdb". Qu'en déduisez-vous par rapport à la commande de la question précédente? 
-
-2) a) Effectuer la commande "/sbin/blkid -o udev -p /dev/sdb1" après la connection du périphérique USB. 
-   b) Etablir une règle udev afin de copier le contenu de n'importe quel périphérique USB qui se connecte à la 
+   c) Effectuer la commande "/sbin/blkid -o udev -p /dev/sdb1" après la connection du périphérique USB. 
+   
+2) a) Etablir une règle udev afin de copier le contenu de n'importe quel périphérique USB qui se connecte à la 
       machine.  
 
 3) a) Connecter votre clé USB à votre ordinateur et faire la commande xxxx. Quel est le numéro de série de votre 
