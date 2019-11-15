@@ -558,4 +558,42 @@ ID_PART_ENTRY_DISK=8:16
 
 Cette commande est intéressante car elle permet de récupérer le nom de la clé notamment. 
 
+2)  Il serait intéressant d'avoir un fichier de log (pour toujours avoir une trace utile pour l'administration) 
+    des différentes connexions et déconnexions de clés USB, ainsi que le montage/démontage de nouvelles partitions
+    sur le disque dur. 
+    a) Créer une nouvelle règle dans laquelle on déclare de nouvelles variables d'envrionnement représentant le 
+       chemin du fichier de log ainsi que celui du script qui écrira dans le fichier de log. 
+    b) Créer une ligne qui va détecter l'ajout d'une nouvelle partition (sda[0-9]) ou d'une connexion de clés USB (sd[b-z][0-9])
+       et qui va lancer le script d'écriture de log avec des paramètres en ligne de commande (nom du périphérique, numéro de série et chemin du fichier de log).
+    c) Créer une ligne qui va détecter la suppression d'une partition ou la déconnexion d'une clé USB (de la même manière que la question précédente)
+
+# Regle permettant de creer un fichier de log pour l'administration #
+
+# Declaration de path_device_log representant le chemin du fichier de log
+ENV{path_device_log}="/usr/local/etc/log/device.log"
+
+# Declaration de path_script_create_log representant le chemin du fichier du script de creation de log
+ENV{path_script_create_log}="/usr/local/bin/script-udev/create_log.sh"
+
+# Ajout d'une ligne dans le fichier de log lors de l'ajout d'une nouvelle partition ou d'un disque dur externe
+KERNEL=="sd[a-z][0-9]", ACTION=="add", RUN+="%E{path_script_create_log} %E{path_device_log} %E{ID_FS_LABEL} %k connexion %E{ID_SERIAL}" 
+
+# Ajout d'une ligne dans le fichier de log lors de la suppression d'une partition ou d'un disque dur externe
+KERNEL=="sd[a-z][0-9]", ACTION=="remove", RUN+="%E{path_script_create_log} %E{path_device_log} %E{ID_FS_LABEL} %k deconnexion %E{ID_SERIAL}"
+
+    d) Créer le script d'écriture de log avec toutes ces informations sans oublier la date et l'heure de l'action. 
+
+#!/bin/bash
+
+# Calcul de la date et de l'heure de l'action
+date_log=$(/usr/bin/date)
+
+# Creation d'une variable contenant la nouvelle ligne à écrire
+new_log="${date_log} - $2 $5 $3 : $4"
+
+# Ecriture de la ligne dans le fichier de log
+echo $new_log >> $1 
+
+    
+
 
