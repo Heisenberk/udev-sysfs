@@ -1,0 +1,14 @@
+$ cd /sys/block/sdb
+$ ls
+alignment_offset  discard_alignment  hidden     power      sdb1       trace
+bdi               events             holders    queue      size       uevent
+capability        events_async       inflight   range      slaves
+dev               events_poll_msecs  integrity  removable  stat
+device            ext_range          mq         ro         subsystem
+clement@Debian-ex:/sys/block/sdb$ cat size
+4104192
+clement@Debian-ex:/sys/block/sdb$ cd sdb1
+clement@Debian-ex:/sys/block/sdb/sdb1$ ls
+alignment_offset  discard_alignment  inflight   power  size   stat       trace
+dev               holders            partition  ro     start  subsystem  uevent
+

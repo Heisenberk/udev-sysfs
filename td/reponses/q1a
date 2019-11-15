@@ -1,0 +1,291 @@
+$ udevadm monitor -k -p
+
+monitor will print the received events for:
+KERNEL - the kernel uevent
+
+KERNEL[8414.073713] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1 (usb)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1
+SUBSYSTEM=usb
+DEVNAME=/dev/bus/usb/001/027
+DEVTYPE=usb_device
+PRODUCT=1e3d/2093/100
+TYPE=0/0/0
+BUSNUM=001
+DEVNUM=027
+SEQNUM=2455
+MAJOR=189
+MINOR=26
+
+KERNEL[8414.080107] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0 (usb)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0
+SUBSYSTEM=usb
+DEVTYPE=usb_interface
+PRODUCT=1e3d/2093/100
+TYPE=0/0/0
+INTERFACE=8/6/80
+MODALIAS=usb:v1E3Dp2093d0100dc00dsc00dp00ic08isc06ip50in00
+SEQNUM=2456
+
+KERNEL[8414.083384] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3
+SUBSYSTEM=scsi
+DEVTYPE=scsi_host
+SEQNUM=2457
+
+KERNEL[8414.083452] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/scsi_host/host3 (scsi_host)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/scsi_host/host3
+SUBSYSTEM=scsi_host
+SEQNUM=2458
+
+KERNEL[8414.083538] bind     /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0 (usb)
+ACTION=bind
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0
+SUBSYSTEM=usb
+DEVTYPE=usb_interface
+DRIVER=usb-storage
+PRODUCT=1e3d/2093/100
+TYPE=0/0/0
+INTERFACE=8/6/80
+MODALIAS=usb:v1E3Dp2093d0100dc00dsc00dp00ic08isc06ip50in00
+SEQNUM=2459
+
+KERNEL[8414.083655] bind     /devices/pci0000:00/0000:00:0b.0/usb1/1-1 (usb)
+ACTION=bind
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1
+SUBSYSTEM=usb
+DEVNAME=/dev/bus/usb/001/027
+DEVTYPE=usb_device
+DRIVER=usb
+PRODUCT=1e3d/2093/100
+TYPE=0/0/0
+BUSNUM=001
+DEVNUM=027
+SEQNUM=2460
+MAJOR=189
+MINOR=26
+
+KERNEL[8415.109311] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0
+SUBSYSTEM=scsi
+DEVTYPE=scsi_target
+SEQNUM=2461
+
+KERNEL[8415.109380] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0
+SUBSYSTEM=scsi
+DEVTYPE=scsi_device
+MODALIAS=scsi:t-0x00
+SEQNUM=2462
+
+KERNEL[8415.109439] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_disk/3:0:0:0 (scsi_disk)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_disk/3:0:0:0
+SUBSYSTEM=scsi_disk
+SEQNUM=2463
+
+KERNEL[8415.109505] bind     /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0 (scsi)
+ACTION=bind
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0
+SUBSYSTEM=scsi
+DEVTYPE=scsi_device
+DRIVER=sd
+MODALIAS=scsi:t-0x00
+SEQNUM=2464
+
+KERNEL[8415.109568] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_device/3:0:0:0 (scsi_device)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_device/3:0:0:0
+SUBSYSTEM=scsi_device
+SEQNUM=2465
+
+KERNEL[8415.112779] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_generic/sg2 (scsi_generic)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_generic/sg2
+SUBSYSTEM=scsi_generic
+DEVNAME=/dev/sg2
+SEQNUM=2466
+MAJOR=21
+MINOR=2
+
+KERNEL[8415.112895] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/bsg/3:0:0:0 (bsg)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/bsg/3:0:0:0
+SUBSYSTEM=bsg
+DEVNAME=/dev/bsg/3:0:0:0
+SEQNUM=2467
+MAJOR=249
+MINOR=2
+
+KERNEL[8415.152046] add      /devices/virtual/bdi/8:16 (bdi)
+ACTION=add
+DEVPATH=/devices/virtual/bdi/8:16
+SUBSYSTEM=bdi
+SEQNUM=2468
+
+KERNEL[8415.225357] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb (block)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb
+SUBSYSTEM=block
+DEVNAME=/dev/sdb
+DEVTYPE=disk
+SEQNUM=2469
+MAJOR=8
+MINOR=16
+
+KERNEL[8415.225458] add      /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb/sdb1 (block)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb/sdb1
+SUBSYSTEM=block
+DEVNAME=/dev/sdb1
+DEVTYPE=partition
+PARTN=1
+SEQNUM=2470
+MAJOR=8
+MINOR=17
+
+KERNEL[8424.242870] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/bsg/3:0:0:0 (bsg)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/bsg/3:0:0:0
+SUBSYSTEM=bsg
+DEVNAME=/dev/bsg/3:0:0:0
+SEQNUM=2471
+MAJOR=249
+MINOR=2
+
+KERNEL[8424.243634] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_generic/sg2 (scsi_generic)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_generic/sg2
+SUBSYSTEM=scsi_generic
+DEVNAME=/dev/sg2
+SEQNUM=2472
+MAJOR=21
+MINOR=2
+
+KERNEL[8424.243918] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_device/3:0:0:0 (scsi_device)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_device/3:0:0:0
+SUBSYSTEM=scsi_device
+SEQNUM=2473
+
+KERNEL[8424.244811] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_disk/3:0:0:0 (scsi_disk)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/scsi_disk/3:0:0:0
+SUBSYSTEM=scsi_disk
+SEQNUM=2474
+
+KERNEL[8424.248203] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb/sdb1 (block)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb/sdb1
+SUBSYSTEM=block
+DEVNAME=/dev/sdb1
+DEVTYPE=partition
+PARTN=1
+SEQNUM=2475
+MAJOR=8
+MINOR=17
+
+KERNEL[8424.248429] remove   /devices/virtual/bdi/8:16 (bdi)
+ACTION=remove
+DEVPATH=/devices/virtual/bdi/8:16
+SUBSYSTEM=bdi
+SEQNUM=2476
+
+KERNEL[8424.248724] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb (block)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0/block/sdb
+SUBSYSTEM=block
+DEVNAME=/dev/sdb
+DEVTYPE=disk
+SEQNUM=2477
+MAJOR=8
+MINOR=16
+
+KERNEL[8424.248869] unbind   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0 (scsi)
+ACTION=unbind
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0
+SUBSYSTEM=scsi
+DEVTYPE=scsi_device
+SEQNUM=2478
+
+KERNEL[8424.248997] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0 (scsi)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0/3:0:0:0
+SUBSYSTEM=scsi
+DEVTYPE=scsi_device
+MODALIAS=scsi:t-0x00
+SEQNUM=2479
+
+KERNEL[8424.262168] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0 (scsi)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/target3:0:0
+SUBSYSTEM=scsi
+DEVTYPE=scsi_target
+SEQNUM=2480
+
+KERNEL[8424.262269] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/scsi_host/host3 (scsi_host)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3/scsi_host/host3
+SUBSYSTEM=scsi_host
+SEQNUM=2481
+
+KERNEL[8424.262327] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3 (scsi)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0/host3
+SUBSYSTEM=scsi
+DEVTYPE=scsi_host
+SEQNUM=2482
+
+KERNEL[8424.262570] unbind   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0 (usb)
+ACTION=unbind
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0
+SUBSYSTEM=usb
+DEVTYPE=usb_interface
+PRODUCT=1e3d/2093/100
+TYPE=0/0/0
+INTERFACE=8/6/80
+SEQNUM=2483
+
+KERNEL[8424.262668] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0 (usb)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1/1-1:1.0
+SUBSYSTEM=usb
+DEVTYPE=usb_interface
+PRODUCT=1e3d/2093/100
+TYPE=0/0/0
+INTERFACE=8/6/80
+MODALIAS=usb:v1E3Dp2093d0100dc00dsc00dp00ic08isc06ip50in00
+SEQNUM=2484
+
+KERNEL[8424.262884] unbind   /devices/pci0000:00/0000:00:0b.0/usb1/1-1 (usb)
+ACTION=unbind
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1
+SUBSYSTEM=usb
+DEVNAME=/dev/bus/usb/001/027
+DEVTYPE=usb_device
+PRODUCT=1e3d/2093/100
+TYPE=0/0/0
+BUSNUM=001
+DEVNUM=027
+SEQNUM=2485
+MAJOR=189
+MINOR=26
+
+KERNEL[8424.263005] remove   /devices/pci0000:00/0000:00:0b.0/usb1/1-1 (usb)
+ACTION=remove
+DEVPATH=/devices/pci0000:00/0000:00:0b.0/usb1/1-1
+SUBSYSTEM=usb
+DEVNAME=/dev/bus/usb/001/027
+DEVTYPE=usb_device
+PRODUCT=1e3d/2093/100
+TYPE=0/0/0
+BUSNUM=001
+DEVNUM=027
+SEQNUM=2486
+MAJOR=189
+MINOR=26
