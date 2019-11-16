@@ -1,0 +1,183 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[top=1.8cm, bottom=1.8cm, left=1.8cm, right=1.8cm]{geometry}
+\usepackage[linktocpage,colorlinks=false]{hyperref}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{subfig}
+\usepackage{multicol}
+\usepackage{caption}
+\usepackage{algorithm}
+\usepackage{color}
+\usepackage{algorithmic}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+
+\definecolor{darkWhite}{rgb}{0.94,0.94,0.94}
+
+\lstset{
+	aboveskip=3mm,
+	belowskip=-2mm,
+	backgroundcolor=\color{darkWhite},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,
+	breaklines=true,
+	captionpos=b,
+	commentstyle=\color{gray},
+	deletekeywords={...},
+	escapeinside={\%*}{*)},
+	extendedchars=true,
+	framexleftmargin=16pt,
+	framextopmargin=3pt,
+	framexbottommargin=6pt,
+	frame=tb,
+	keepspaces=true,
+	keywordstyle=\color{blue},
+	language=C,
+	literate=
+	{²}{{\textsuperscript{2}}}1
+	{⁴}{{\textsuperscript{4}}}1
+	{⁶}{{\textsuperscript{6}}}1
+	{⁸}{{\textsuperscript{8}}}1
+	{€}{{\euro{}}}1
+	{é}{{\'e}}1
+	{è}{{\`{e}}}1
+	{ê}{{\^{e}}}1
+	{ë}{{\¨{e}}}1
+	{É}{{\'{E}}}1
+	{Ê}{{\^{E}}}1
+	{û}{{\^{u}}}1
+	{ù}{{\`{u}}}1
+	{â}{{\^{a}}}1
+	{à}{{\`{a}}}1
+	{á}{{\'{a}}}1
+	{ã}{{\~{a}}}1
+	{Á}{{\'{A}}}1
+	{Â}{{\^{A}}}1
+	{Ã}{{\~{A}}}1
+	{ç}{{\c{c}}}1
+	{Ç}{{\c{C}}}1
+	{õ}{{\~{o}}}1
+	{ó}{{\'{o}}}1
+	{ô}{{\^{o}}}1
+	{Õ}{{\~{O}}}1
+	{Ó}{{\'{O}}}1
+	{Ô}{{\^{O}}}1
+	{î}{{\^{i}}}1
+	{Î}{{\^{I}}}1
+	{í}{{\'{i}}}1
+	{Í}{{\~{Í}}}1,
+	morekeywords={*,...},
+	numbers=left,
+	numbersep=10pt,
+	numberstyle=\tiny\color{black},
+	rulecolor=\color{black},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	stepnumber=1,
+	stringstyle=\color{black},
+	tabsize=4,
+	title=\lstname,
+}
+
+
+
+\hypersetup{
+    colorlinks=true,
+    breaklinks=true,
+    urlcolor=red,
+}
+\parskip=5pt
+
+\title{\huge{\textbf TD \\UDEV et SYSFS : Ecriture de règles et administration}}
+\date{Lundi 25 novembre 2019}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Exercice 1}
+
+\begin{enumerate}
+	\item Effectuer la commande suivante "udevadm monitor -k -p". Connecter ensuite un périphérique USB. Déconnecter enfin ce périphérique. Que remarquez-vous? 
+	
+	\lstinputlisting[caption={udevadm monitor -k -p}, language=SH]{./reponses/q1a} \bigskip 
+	
+	La commande permet de détecter la connexion ou la déconnexion de n'importe quel périphérique. C'est bien udev qui gère les périphériques.\bigskip
+	
+	\item Reconnecter la clé USB et exécuter la commande "udevadm info -a -p /sys/block/sdb". Qu'en déduisez-vous par rapport à la commande de la question précédente? 
+	
+	\lstinputlisting[caption={udevadm info -a -p /sys/block/sdb}, language=SH]{./reponses/q1b} \bigskip
+	
+	Quand on veut les informations d'un périphérique déjà connecté, on utilise cette commande. Elle permet de visualiser certains attributs. 
+	Ces attributs sont des attributs générés par sysfs. Sysfs est un système de fichiers virtuel qui va récupérer les attributs de chaque périphérique et créer leurs 
+	attributs correspondants. Dans les questions suivantes, on pourra visualiser où ces attributs sont créés.
+	
+	\item Faire la commande "df -h" et retrouver avec le système de fichiers associé à la clé USB. 
+	Parcourir le dossier /sys/block/sd[a-z] en fonction de ce que vous avez trouvé à la question précédente. Que remarquez-vous?
+	
+	\lstinputlisting[caption={df -h}, language=SH]{./reponses/q1c1} \bigskip
+	
+	\lstinputlisting[caption={sys/block/sdb}, language=SH]{./reponses/q1c2} \bigskip
+	
+	On peut donc voir ici que sysfs exporte depuis l'espace noyau vers l'espace utilisateur les informations 
+	sur les périphériques du système. Ainsi, il va créer un dossier associé au système de fichiers contenant une 
+	suite de fichiers représentant les attributs du périphérique en question. Ainsi, c'est udev qui va 
+	interpréter les fichiers générés par sysfs pour donner ces attributs à l'utilisateur. Cela permet donc 
+	de créer des règles qui vont s'appliquer en fonction des attributs des périphériques. \newpage
+	
+	
+	\item Effectuer la commande "sudo /sbin/blkid -o udev -p /dev/sdb1".
+	
+	\lstinputlisting[caption={/sbin/blkid}, language=SH]{./reponses/q1d} \bigskip
+	
+	Cette commande est intéressante car elle permet de récupérer le nom de la clé notamment. 
+	
+\end{enumerate}
+
+\subsection*{Exercice 2}
+
+Il serait intéressant d'avoir un fichier de log (pour toujours avoir une trace utile pour l'administration) 
+des différentes connexions et déconnexions de clés USB, ainsi que le montage/démontage de nouvelles partitions
+sur le disque dur. 
+
+\begin{enumerate}
+	\item Créer une nouvelle règle dans laquelle on déclare de nouvelles variables d'envrionnement représentant le 
+	chemin du fichier de log ainsi que celui du script qui écrira dans le fichier de log. 
+	\item Créer une ligne qui va détecter l'ajout d'une nouvelle partition (sda[0-9]) ou d'une connexion de clés USB (sd[b-z][0-9])
+	et qui va lancer le script d'écriture de log avec des paramètres en ligne de commande (nom du périphérique, numéro de série et chemin du fichier de log).
+	\item Créer une ligne qui va détecter la suppression d'une partition ou la déconnexion d'une clé USB (de la même manière que la question précédente)
+	
+	\lstinputlisting[caption={11-log.rules}, language=SH]{./reponses/q2a} \bigskip
+	
+	\item Créer le script d'écriture de log avec toutes ces informations sans oublier la date et l'heure de l'action.
+	
+	\lstinputlisting[caption={create\_log.sh}, language=SH]{./reponses/q2b} \bigskip
+	
+	\item Etablir une règle udev qui réalise les questions antérieures sans passer par un script (indice : utiliser "echo").
+	
+	\lstinputlisting[caption={11-log-v2.rules}, language=SH]{./reponses/q2c} \bigskip
+
+\end{enumerate}
+
+\subsection*{Exercice 3}
+
+Sur certaines versions de linux, lorsque l'on connecte un périphérique USB, un point de montage 
+est automatiquement créé dans /home/usr/Desktop/. Faites de même avec une règle udev. 
+(Indice : utiliser /usr/bin/systemd-mount au lieu de /usr/bin/mount : \url{https://wiki.archlinux.org/index.php/Udev})
+
+\lstinputlisting[caption={12-automount.rules}, language=SH]{./reponses/q3} \bigskip
+
+
+
+\end{document}
