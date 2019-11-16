@@ -99,7 +99,7 @@
 }
 \parskip=5pt
 
-\title{\huge{\textbf {Correction TD} \\UDEV et SYSFS : Ecriture de règles et administration}}
+\title{\huge{\textbf {TD} \\UDEV et SYSFS : Ecriture de règles et administration}}
 \date{Lundi 25 novembre 2019}
 
 \begin{document}
@@ -111,37 +111,12 @@
 \begin{enumerate}
 	\item Effectuer la commande suivante "udevadm monitor -k -p". Connecter ensuite un périphérique USB. Déconnecter enfin ce périphérique. Que remarquez-vous? 
 	
-	\lstinputlisting[caption={udevadm monitor -k -p}, language=SH]{./reponses/q1a} \bigskip 
-	
-	La commande permet de détecter la connexion ou la déconnexion de n'importe quel périphérique. C'est bien udev qui gère les périphériques.\bigskip
-	
 	\item Reconnecter la clé USB et exécuter la commande "udevadm info -a -p /sys/block/sdb". Qu'en déduisez-vous par rapport à la commande de la question précédente? 
-	
-	\lstinputlisting[caption={udevadm info -a -p /sys/block/sdb}, language=SH]{./reponses/q1b} \bigskip
-	
-	Quand on veut les informations d'un périphérique déjà connecté, on utilise cette commande. Elle permet de visualiser certains attributs. 
-	Ces attributs sont des attributs générés par sysfs. Sysfs est un système de fichiers virtuel qui va récupérer les attributs de chaque périphérique et créer leurs 
-	attributs correspondants. Dans les questions suivantes, on pourra visualiser où ces attributs sont créés.
 	
 	\item Faire la commande "df -h" et retrouver avec le système de fichiers associé à la clé USB. 
 	Parcourir le dossier /sys/block/sd[a-z] en fonction de ce que vous avez trouvé à la question précédente. Que remarquez-vous?
 	
-	\lstinputlisting[caption={df -h}, language=SH]{./reponses/q1c1} \bigskip
-	
-	\lstinputlisting[caption={sys/block/sdb}, language=SH]{./reponses/q1c2} \bigskip
-	
-	On peut donc voir ici que sysfs exporte depuis l'espace noyau vers l'espace utilisateur les informations 
-	sur les périphériques du système. Ainsi, il va créer un dossier associé au système de fichiers contenant une 
-	suite de fichiers représentant les attributs du périphérique en question. Ainsi, c'est udev qui va 
-	interpréter les fichiers générés par sysfs pour donner ces attributs à l'utilisateur. Cela permet donc 
-	de créer des règles qui vont s'appliquer en fonction des attributs des périphériques. \newpage
-	
-	
-	\item Effectuer la commande "sudo /sbin/blkid -o udev -p /dev/sdb1".
-	
-	\lstinputlisting[caption={/sbin/blkid}, language=SH]{./reponses/q1d} \bigskip
-	
-	Cette commande est intéressante car elle permet de récupérer le nom de la clé notamment. 
+	\item Effectuer la commande "sudo /sbin/blkid -o udev -p /dev/sdb1". 
 	
 \end{enumerate}
 
@@ -158,15 +133,9 @@ sur le disque dur.
 	et qui va lancer le script d'écriture de log avec des paramètres en ligne de commande (nom du périphérique, numéro de série et chemin du fichier de log).
 	\item Créer une ligne qui va détecter la suppression d'une partition ou la déconnexion d'une clé USB (de la même manière que la question précédente)
 	
-	\lstinputlisting[caption={11-log.rules}, language=SH]{./reponses/q2a} \bigskip
-	
 	\item Créer le script d'écriture de log avec toutes ces informations sans oublier la date et l'heure de l'action.
 	
-	\lstinputlisting[caption={create\_log.sh}, language=SH]{./reponses/q2b} \bigskip
-	
 	\item Etablir une règle udev qui réalise les questions antérieures sans passer par un script (indice : utiliser "echo").
-	
-	\lstinputlisting[caption={11-log-v2.rules}, language=SH]{./reponses/q2c} \bigskip
 
 \end{enumerate}
 
@@ -176,29 +145,15 @@ Sur certaines versions de linux, lorsque l'on connecte un périphérique USB, un
 est automatiquement créé dans /home/usr/Desktop/. Faites de même avec une règle udev. 
 (Indice : utiliser /usr/bin/systemd-mount au lieu de /usr/bin/mount : \url{https://wiki.archlinux.org/index.php/Udev})
 
-\lstinputlisting[caption={12-automount.rules}, language=SH]{./reponses/q3} \bigskip \newpage
-
 \subsection*{Exercice 4}
 
 Ce qui pourrait être utile de réaliser grâce aux règles udev et les attributs de sysfs serait de faire un backup d'un dossier important de la machine lors de la connection d'une certaine clé USB (celle qui vous appartient de préférence). 
 
 \begin{enumerate}
 	\item Réaliser une règle udev permettant de faire un backup du dossier de votre choix présent sur votre machine sur n'importe quelle clé USB qui se connecte (Aide : Faire attention à la synchronisation des différentes commandes ; Utiliser la commande rsync pour faire un backup).
-	
-	\lstinputlisting[caption={10-backup.rules}, language=SH]{./reponses/q4a} \bigskip
-	
-	\lstinputlisting[caption={autobackup.sh}, language=SH]{./reponses/q4b} \bigskip
-	
-	\lstinputlisting[caption={umount.sh}, language=SH]{./reponses/q4c} \bigskip
 
-	\item Modifier la règle précédente afin de faire le backup uniquement sur la clé USB qui vous appartient (Indice : Utiliser le numéro de série de votre clé).
-	
-	\lstinputlisting[caption={10-backup-v2.rules}, language=SH]{./reponses/q4d} \bigskip
-	
-		
+	\item Modifier la règle précédente afin de faire le backup uniquement sur la clé USB qui vous appartient (Indice : Utiliser le numéro de série de votre clé).		
 	
 \end{enumerate}
-
-
 
 \end{document}

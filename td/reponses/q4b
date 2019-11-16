@@ -1,0 +1,15 @@
+#!/bin/bash
+
+(
+# Creation du dossier representant le futur point de montage (s'il nexiste pas deja)
+if [ ! -d /usr/local/etc/$1 ] ; then mkdir /usr/local/etc/$1 ; fi
+
+# Montage de la cle USB dans le dossier cree
+/usr/bin/systemd-mount --no-block --automount=yes --collect /dev/$1 /usr/local/etc/$1
+
+# Attente de 2 secondes (necessaire car le montage de la cle prend du temps
+sleep 2
+
+# Backup du dossier de la machine vers la cle USB connectee
+/usr/bin/rsync -rtv --del --modify-window=2 /home/user/Desktop/SEC302 /usr/local/etc/$1
+) & # Synchronisation de toutes les commandes
