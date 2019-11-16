@@ -1,0 +1,7 @@
+# Regle qui va realiser le backup sur n'importe quelle cle USB qui se connecte
+
+# Lorsque l'on connecte la cle USB on declenche le script qui va monter la cle et faire le backup
+KERNEL=="sd?1", ACTION=="add", RUN+="/usr/local/bin/script-udev/autobackup.sh %k"
+
+# Lorsque l'on deconnecte la cle USB on declenche le demontage de la cle et la suppression du dossier 
+KERNEL=="sd?1", ACTION=="remove", RUN+="/usr/local/bin/script-udev/umount.sh %k"
