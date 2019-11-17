@@ -1,0 +1,8 @@
+*.aux
+*.log
+!device.log
+*.out
+*.gz
+*.toc
+*.nav
+*snm

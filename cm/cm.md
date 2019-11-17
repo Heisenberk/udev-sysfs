@@ -11,15 +11,14 @@ Un pilote est un programme qui permet au système d'exploitation d'interagir ave
 ### /dev 
 
 Tout élément dans un OS Linux est représenté par un fichier. De cette manière, les périphériques sont stockés sous forme de fichiers dans le dossier /dev.
-
-Ces fichiers vont donc permettre l’accès aux périphériques. Ceux-ci sont traditionnellement stockés dans /dev et sont appelés device nodes. Un device node est un point d’entrée vers le noyau caractérisé par un type (bloc ou char) et deux nombres: le major et le minor. Ce triplé définit de façon unique quel périphérique matériel est accédé via ce fichier. Le majeur permet au noyau de savoir quel driver doit gérer le périphérique et le mineur permet au driver de savoir quel périphérique parmi ceux qu’il gère est utilisé. 
+Ces fichiers vont donc permettre l’accès aux périphériques et sont appelés device nodes. Un device node est un point d’entrée vers le noyau caractérisé par un type (bloc ou char) et deux nombres: le major et le minor. Ce triplé définit de façon unique quel périphérique matériel est accédé via ce fichier. Le majeur permet au noyau de savoir quel driver doit gérer le périphérique et le mineur permet au driver de savoir quel périphérique parmi ceux qu’il gère est utilisé. 
 
 Si on fait ls -l /dev, on pourra voir la liste des périphériques. 
 
 Pour rappel, C représente les fichiers spéciaux en mode caractère avec lecture octet par octet cad des portes vers les périphériques (ex port série). 
 B représente les fichiers spéciaux en mode bloc de données avec lecture des données par blocs (ex disques).
 
-## Historique avant udev et sysfs
+## Historique avant udev
 
 ### makedev
 
@@ -48,27 +47,27 @@ SEQNUM : un numéro croissant pour ordonner les événements,
 SUBSYSTEM : Le sous-système noyau ayant causé l’événement, 
 DEVPATH : Le fichier dans /sys correspondant au périphérique. 
 
+----------------------------------------------------------------------------------------------------------------------------------
+
 ### sysfs
 
 * Sysfs est un système de fichier virtuel, c'est à dire couche d'abstraction au dessus du système de fichier physique
 * introduit en même temp que Udev avec le noyau 2.6 de linux
-* pourquoi ? n'existe pas de représentation unifier des pilotes/periphérique, gérer les hotplugs (ex: usb)
+* pourquoi ? n'existe pas de représentation unifiée des pilotes/periphérique, gérer les hotplugs (ex: usb)
+* va récupérer les attributs de chaque périphérique et créer leurs attributs correspondants. 
 
- Sysfs est un système de fichiers virtuel qui va récupérer les attributs de chaque périphérique et créer leurs 
-attributs correspondants. Dans les questions suivantes, on pourra visualiser où ces attributs sont créés.
-
-On peut donc voir ici que sysfs exporte depuis l'espace noyau vers l'espace utilisateur les informations 
+sysfs exporte depuis l'espace noyau vers l'espace utilisateur les informations 
 sur les périphériques du système. Ainsi, il va créer un dossier associé au système de fichiers contenant une 
 suite de fichiers représentant les attributs du périphérique en question. Ainsi, c'est udev qui va 
 interpréter les fichiers générés par sysfs pour donner ces attributs à l'utilisateur. Cela permet donc 
 de créer des règles qui vont s'appliquer en fonction des attributs des périphériques.
 
-* permet de regouper un grand nombre d'information ajouter : 
+* permet de regrouper un grand nombre d'informations : 
 	- /sys/devices/ (représentant la couche physique). 
 	- /sys/bus/ est peuplé de liens symboliques, représentant la manière dont chaque périphérique appartient aux différents bus. 
 	- /sys/class/ montre les périphériques regroupés en classes, comme les périphériques réseau par exemple
 	- pendant que /sys/block/ contient les périphériques de type bloc. 
-les information contenu dans ces fichier sont accesible pour l'écriture de règles
+Les informations contenues dans ces fichiers sont accessibles pour l'écriture de règles.
 
 Dans le TD, l'exercice 1 permet de comprendre les différentes commandes principales avec la visualisation des différents attributs. 
 
