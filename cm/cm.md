@@ -76,26 +76,51 @@ Dans le TD, l'exercice 1 permet de comprendre les différentes commandes princip
 ### Introduction
 
 Pourquoi écrire des règles ?
-les règle permettent d'automatiser un certain nombre de taches en fonction des évènements recensées par le noyau.
+Les règles permettent d'automatiser un certain nombre de taches en fonction des évènements recensées par le noyau.
 
 * possibilités :
 	- changer de nom un périphérique (durable ou lien symbolique)
 	- changer les permissions et les propriétés d'un périphérique
-	- LANCER DES SCRIPTS
+	- lancer des scripts
 
-* Ou sont elles ? peut ont en écrire nous même:
+* Où sont elles ? peut on en écrire nous même:
 	- les règle de base se trouve dans /lib/udev/rules.d/*
 	- les règles commence toujours par "[0-9]*-titre.rules"
-	- pour écrire des règles il peut recommander d'écrire dans ce repartoire plutot /etc/udev/rules.d/*
+	- pour écrire des règles il est recommandé d'écrire dans ce répertoire plutôt /etc/udev/rules.d/*
 
 * Syntaxe :
 	- système de clef/valeur (ex: KERNEL, SUBSYSTEM, DRIVER) 
 	- commande (ex : SYMLINK, NAME, RUN)
 	- substitution de caractère (ex : ?1 *plusieurs []liste, %k nom du kernel, %n numero de kernel)
-	- 1 ligne = 1 règle le seul moyen de couper finir la ligne par '?'
 
 * lien avec Sysfs:
-	- les attibut contenu dans les fichier de sysfs sont accecible avec la commande ATTR{nom de l'attribut}
-	-  pour connaitre les information du prériphérique utilisé "udevadm info -a -n chemin periphérique".
+	- les attributs contenus dans les fichier de sysfs sont accessibles avec la commande ATTR{nom de l'attribut}
+	- pour connaitre les informations du prériphérique utilisé "udevadm info -a -n chemin/periphérique".
+
+### Opérateurs et clés importantes
+
+== : utilisé pour tester l'égalité
+!= : utilisé pour tester la différence
+= : utilisé pour assigner une valeur à une clé
++= : utilisé pour ajouter la valeur à une suite de valeurs déjà assigné à la clé
+
+ACTION : représente l'action du périphérique (connexion avec add et déconnexion avec remove) ex : ACTION=="add"
+DEVPATH : représente le chemin absolu d'accès au périphérique ex : DEVPATH=="/devices/pci0000:00/0000:00:12.0/usb1/1-1/1-1.3/1-1.3:1.0/net/usb0"
+KERNEL : représente le nom du périphérique ex : KERNEL=="sd[b-z][0-9]"
+NAME : représente le nom du noeud du périphérique
+SYMLINK : représente le lien symbolique du noeud (il peut y avoir plusieurs lien symbolique par noeud)
+SUBSYSTEM : représente ke sous-système du périphérique ex : SUBSYSTEM=="usb"
+DRIVER : représente le nom du pilote du périphérique
+ATTR{filename} : représente l'attribut filename trouvé par sysfs lors de la connexion du périphérique.
+RUN : permet d'exécuter un script ou une commande ex : RUN+="/home/user/Desktop/test.sh" A noter que le script sera exécuté en sudo.
+...
+Se référer au manuel
+
+### Tester ses règles
+
+Pour visualiser quels scripts ont été lancés à la connexion d'un périphérique, il est possible d'utiliser la commande suivante : 
+udevadm test -a add <fichier sysfs> ex : udevadm test /sys/block/sdb
+
+### Exemples concrets 
 
 
