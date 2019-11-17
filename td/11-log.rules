@@ -1,7 +1,0 @@
-
-ENV{path_device_log}="/home/clement/Desktop/device.log"
-ENV{path_script_create_log}="/home/clement/Desktop/create_log.sh"
-ENV{serial_device}=ATTR{serial}
-ENV{ID_FS_LABEL}!="", ENV{dir_name}="%E{ID_FS_LABEL}"
-KERNEL=="sd[a-z][0-9]", ACTION=="add", RUN+="%E{path_script_create_log} %E{path_device_log} %E{dir_name} %k connexion"
-KERNEL=="sd[a-z][0-9]", ACTION=="remove", RUN+="%E{path_script_create_log} %E{path_device_log} %E{dir_name} %k deconnexion"

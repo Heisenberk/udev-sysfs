@@ -1,7 +1,0 @@
-#SUBSYSTEM=="block", ACTION=="add", SYMLINK+="usb%n" RUN+="/home/clement/Desktop/autobackup.sh usb%n"
-
-#KERNEL=="sd?1", ACTION=="add", RUN+="/home/clement/Desktop/mount_backup.sh %k"
-#KERNEL=="sd?1", ACTION=="add", RUN+="/home/clement/Desktop/autobackup.sh %k"
-#, RUN+="/bin/sh -c 'bin/echo backup >> /home/clement/Desktop/test.txt'"
-
-#, RUN+="/home/clement/autobackup.sh %k"

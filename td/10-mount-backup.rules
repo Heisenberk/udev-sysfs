@@ -1,7 +1,0 @@
-
-KERNEL=="sd?1", ACTION=="add", RUN+="/home/clement/Desktop/autobackup.sh %k"
-
-KERNEL=="sd?1", ACTION=="remove", RUN+="/home/clement/Desktop/umount.sh %k"
-
-#KERNEL==sd?1", ACTION=="remove", RUN+="/usr/bin/rm -r /home/clement/Desktop/%k >> /home/clement/Desktop/test"
-#KERNEL=="sd?1", ACTION=="remove", RUN+="/bin/sh -c 'bin/echo salut >> /home/clement/Desktop/remove_detecte'" 
