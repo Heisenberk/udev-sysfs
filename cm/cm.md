@@ -154,13 +154,13 @@ Informations utiles pour les logs
 - Date et heure de l'action
 - Identification de l'action
 - Auteur de l'action (dans l'idéal)
-- Identification de l'outil permettant d'eectuer l'action
+- Identification de l'outil permettant d'effectuer l'action
 
 ### udev et les logs
 
 Utilité de udev et de sysfs pour l'administration
 udev permet de lancer des scripts lors de la connexion et
-deconnexion de périphériques sur la machine.
+deconnexion de périphériques sur la machine.
 On peut donc écrire dans un fichier (de log) afin d'identifier
 l'action (connexion ou déconnexion) et le périphérique.
 

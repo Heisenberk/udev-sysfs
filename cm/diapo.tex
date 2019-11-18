@@ -203,7 +203,7 @@ Les règles permettent d'automatiser un certain nombre de taches en fonction des
 
 \end{frame}
 \begin{frame}
-\begin{block}{Clés principales } 
+\begin{block}{Clés principales \url{https://linux.die.net/man/8/udev}} 
 	
 	\begin{itemize}
 		
@@ -216,13 +216,38 @@ Les règles permettent d'automatiser un certain nombre de taches en fonction des
 		\item SYMLINK : représente le lien symbolique du noeud (il peut y avoir plusieurs lien symbolique par noeud)
 		\item SUBSYSTEM : représente ke sous-système du périphérique ex : SUBSYSTEM=="usb"
 		\item DRIVER : représente le nom du pilote du périphérique
-		\item ATTR{filename} : représente l'attribut filename trouvé par sysfs lors de la connexion du périphérique.
-		\item RUN : permet d'exécuter un script ou une commande ex : RUN+="/home/user/Desktop/test.sh". A noter que le script sera exécuté en sudo.
+		\item ATTR\{filename\} : représente l'attribut filename trouvé par sysfs lors de la connexion du périphérique.
+		\item RUN : permet d'exécuter un script ou une commande
 		\item ...
-		https://linux.die.net/man/8/udev
+		
 	}
 	\end{itemize}
 \end{block}
+\end{frame}
+
+\subsection{Tester ses règles}
+\begin{frame}
+\begin{exampleblock}{udevadm test} 
+		
+		Pour visualiser quels scripts ont été lancés à la connexion d'un périphérique, il est possible d'utiliser la commande suivante : 
+		udevadm test -a add [fichier sysfs] \newline ex : udevadm test /sys/block/sdb
+\end{exampleblock}
+\end{frame}
+
+\subsection{Exemple concret}
+\begin{frame}
+\begin{exampleblock}{Exemples} 
+	
+	\begin{itemize}
+		
+		\setbeamertemplate{itemize item}[circle]
+		\item KERNEL=="sdb[0-9]", ACTION=="add", RUN+="/usr/bin/program.sh" : va détecter la connexion d'un disque dur externe et va lancer le script program.sh
+		\item KERNEL=="sdb[0-9]", ACTION=="add", RUN+="/usr/bin/program.sh" : va détecter la connexion d'un disque dur externe et va lancer le script program.sh
+		\item KERNEL=="mice", ACTION=="add", NAME="souris" : va détecter la souris à sa connexion et va créer un unique node dans dev/souris
+		\item KERNEL=="hdc", ACTION=="add", SYMLINK+="dev/cdrom" : va détecter le CD-ROM et va créer un lien symbolique dev/cdrom et qui pointera vers dev/hdc
+			
+	\end{itemize}
+\end{exampleblock}
 \end{frame}
 
 \section{Administration}
@@ -263,7 +288,22 @@ Les règles permettent d'automatiser un certain nombre de taches en fonction des
 \end{exampleblock}
 \end{frame}
 
-\section{References}
+\subsection{Exemple concret}
+\begin{frame}
+\begin{exampleblock}{Idées de règles udev pour l'administration}
+	\begin{itemize}
+		\setbeamertemplate{itemize item}[circle]
+		\item Exercice de création de logs qui va détecter les différentes connexions et déconnexions de clés USB, ainsi que le montage/démontage
+		de nouvelles partitions sur le disque dur (exercice 2).
+	    \item Exercice qui va créer un nouveau point de montage d'une clé USB et la démonter à sa déconnexion (exercice 3).
+		\item Exercice qui va réaliser un backup sur une clé particulière (en fonction du numéro de série) (exercice 4).
+		\item Exemple d'exercice d'administration qui va faire une analyse anti-virus automatique du contenu de la clé USB qui vient d'être connectée.
+		
+	\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\section{Références}
 
  \begin{frame}
 \begin{block}{Références} 
