@@ -29,6 +29,8 @@ Il fallait donc trouver une autre solution pour les versions suivantes de Linux.
 
 Devfs est un système de fichiers contenant les device nodes et dont les noeuds sont créés par les pilotes des périphériques lors de leur détection. Cependant, il y avait toujours certaines limites (espace de numéros trop petit notamment).
 
+
+
 ## Définitions de udev et sysfs
 
 ### udev
@@ -36,6 +38,8 @@ Devfs est un système de fichiers contenant les device nodes et dont les noeuds 
 udev est un gestionnaire de périphériques du dossier /dev. Il va créer des nœuds dynamiquement pour les périphériques connectés au système. 
 
 Udev détecte lorsqu'un nouveau périphérique est connecté. On peut le voir avec udevadm monitor -k avant de connecter une clé USB par exemple. De même lorsqu'on l'a déconnecté. 
+
+----------------------------------------------------------------------------------------------------------------------------------
 
 Par exemple, en utilisant la commande ```udevadm monitor -k```, cela permet de visualiser les détections des périphériques faites par udev. 
 On peut également afficher certaines propriétés avec ```udevadm monitor -k -p```
@@ -47,7 +51,7 @@ SEQNUM : un numéro croissant pour ordonner les événements,
 SUBSYSTEM : Le sous-système noyau ayant causé l’événement, 
 DEVPATH : Le fichier dans /sys correspondant au périphérique. 
 
-----------------------------------------------------------------------------------------------------------------------------------
+
 
 ### sysfs
 
@@ -70,6 +74,8 @@ de créer des règles qui vont s'appliquer en fonction des attributs des périph
 Les informations contenues dans ces fichiers sont accessibles pour l'écriture de règles.
 
 Dans le TD, l'exercice 1 permet de comprendre les différentes commandes principales avec la visualisation des différents attributs. 
+
+----------------------------------------------------------------------------------------------------------------------------------
 
 ## Ecriture de règles 
 
@@ -114,7 +120,11 @@ DRIVER : représente le nom du pilote du périphérique
 ATTR{filename} : représente l'attribut filename trouvé par sysfs lors de la connexion du périphérique.
 RUN : permet d'exécuter un script ou une commande ex : RUN+="/home/user/Desktop/test.sh" A noter que le script sera exécuté en sudo.
 ...
-Se référer au manuel
+https://linux.die.net/man/8/udev
+
+%n : représente le numéro kernel ex : sdb1 -> 1
+%k : nom kernel ex : sdb1 
+%c : permet de récupérer la sortie de PROGRAM
 
 ### Tester ses règles
 
@@ -122,5 +132,34 @@ Pour visualiser quels scripts ont été lancés à la connexion d'un périphéri
 udevadm test -a add <fichier sysfs> ex : udevadm test /sys/block/sdb
 
 ### Exemples concrets 
+
+## Administration
+
+### Log définition
+
+Un log (ou logging) est un fichier permettant de stocker un
+historique des événements sur une machine. C'est donc un journal
+de bord qui est utilisée dans l'administration systeme pour garder
+une trace de ce qui s'est passée (pas forcement des incidents).
+
+Informations utiles pour les logs
+ Date et heure de l'action
+ Identification de l'action
+ Auteur de l'action (dans l'idéal)
+ Identification de l'outil permettant d'eectuer l'action
+
+### udev et les logs
+
+Utilité de udev et de sysfs pour l'administration
+udev permet de lancer des scripts lors de la connexion et
+deconnexion de périphériques sur la machine.
+On peut donc écrire dans un fichier (de log) afin d'identifier
+l'action (connexion ou déconnexion) et le périphérique.
+
+### Exemple concret
+
+
+Exemple sur un antivirus qui vérifie le contenu de la clé
+Exemple qui change le proprietaire de la clé USB
 
 
