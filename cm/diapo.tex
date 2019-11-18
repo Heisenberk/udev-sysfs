@@ -43,7 +43,7 @@
 		Ces fichiers vont donc permettre l’accès aux périphériques et sont appelés device nodes. 
 	\end{block}
     \begin{block}{Device Node}
-    	Un device node est un point d’entrée vers le noyau caractérisé par un type (bloc ou char) et deux nombres: le major et le minor. Ce triplé définit de façon unique quel périphérique matériel est accédé via ce fichier. Le majeur permet au noyau de savoir quel driver doit gérer le périphérique et le mineur permet au driver de savoir quel périphérique parmi ceux qu’il gère est utilisé. 
+    	Un device node est un point d’entrée vers le noyau caractérisé par un type (bloc ou char) et deux nombres: le major et le minor. Cela définit de façon unique quel périphérique matériel est accédé via ce fichier. 
     \end{block}
 	\begin{exampleblock}{ls -l /dev} 
 		 Permet de voir les différents node devices de la machine.
@@ -135,6 +135,95 @@ Les propriétés dépendent du type exact de périphérique mais certaines propr
 \end{frame}
 
 \section{Ecriture de règles}
+
+\subsection{Introduction : Pourquoi écrire des règles ?}
+
+\begin{frame}
+Les règles permettent d'automatiser un certain nombre de taches en fonction des évènements recensées par le noyau.
+
+\begin{block}{Que peut-on faire avec ?} 
+	
+	\begin{itemize}
+		\setbeamertemplate{itemize item}[circle]
+		\item changer de nom un périphérique (durable ou lien symbolique)
+		\item changer les permissions et les propriétés d'un périphérique
+		\item lancer des scripts
+	\end{itemize}
+\end{block}
+
+\begin{block}{Comment les écrire ?} 
+	
+	\begin{itemize}
+		\setbeamertemplate{itemize item}[circle]
+		\item les règles de base se trouvent dans /lib/udev/rules.d/*
+		\item les règles commencent toujours par "[0-9]*-titre.rules"
+		\item écrire dans ce répertoire plutôt /etc/udev/rules.d/*
+	\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Quelle est la syntaxe globale ?} 
+	
+	\begin{itemize}
+		\setbeamertemplate{itemize item}[circle]
+		\item système de clef/valeur (ex: KERNEL, SUBSYSTEM, DRIVER) 
+		\item commande (ex : SYMLINK, NAME, RUN)
+		\item utilisation des expressions régulières
+		\item utilisation de substitution de caractères
+	\end{itemize}
+\end{block}
+\end{frame}
+
+\subsection{Opérateurs et clés importantes}
+
+\begin{frame}
+\begin{block}{Opérateurs} 
+	
+	\begin{itemize}
+		
+		\setbeamertemplate{itemize item}[circle]
+		\item == : utilisé pour tester l'égalité
+		\item != : utilisé pour tester la différence
+		\item = : utilisé pour assigner une valeur à une clé
+		\item += : utilisé pour ajouter la valeur à une suite de valeurs déjà assigné à la clé
+	\end{itemize}
+\end{block}
+
+\begin{block}{Substitutions de caractères} 
+	
+	\begin{itemize}
+		
+		\setbeamertemplate{itemize item}[circle]
+		\item \%n : représente le numéro kernel ex : sdb1 -> 1
+		\item \%k : nom kernel ex : sdb1 
+		\item \%c : permet de récupérer la sortie de PROGRAM
+	\end{itemize}
+\end{block}
+
+\end{frame}
+\begin{frame}
+\begin{block}{Clés principales } 
+	
+	\begin{itemize}
+		
+		\setbeamertemplate{itemize item}[circle]
+		\footnotesize{
+		\item ACTION : représente l'action du périphérique (connexion avec add et déconnexion avec remove) ex : ACTION=="add"
+		\item DEVPATH : représente le chemin absolu d'accès au périphérique
+		\item KERNEL : représente le nom du périphérique ex : KERNEL=="sd[b-z][0-9]"
+		\item NAME : représente le nom du noeud du périphérique
+		\item SYMLINK : représente le lien symbolique du noeud (il peut y avoir plusieurs lien symbolique par noeud)
+		\item SUBSYSTEM : représente ke sous-système du périphérique ex : SUBSYSTEM=="usb"
+		\item DRIVER : représente le nom du pilote du périphérique
+		\item ATTR{filename} : représente l'attribut filename trouvé par sysfs lors de la connexion du périphérique.
+		\item RUN : permet d'exécuter un script ou une commande ex : RUN+="/home/user/Desktop/test.sh". A noter que le script sera exécuté en sudo.
+		\item ...
+		https://linux.die.net/man/8/udev
+	}
+	\end{itemize}
+\end{block}
+\end{frame}
 
 \section{Administration}
 

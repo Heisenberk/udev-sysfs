@@ -90,8 +90,8 @@ Les règles permettent d'automatiser un certain nombre de taches en fonction des
 	- lancer des scripts
 
 * Où sont elles ? peut on en écrire nous même:
-	- les règle de base se trouve dans /lib/udev/rules.d/*
-	- les règles commence toujours par "[0-9]*-titre.rules"
+	- les règles de base se trouvent dans /lib/udev/rules.d/*
+	- les règles commencent toujours par "[0-9]*-titre.rules"
 	- pour écrire des règles il est recommandé d'écrire dans ce répertoire plutôt /etc/udev/rules.d/*
 
 * Syntaxe :
@@ -110,6 +110,10 @@ Les règles permettent d'automatiser un certain nombre de taches en fonction des
 = : utilisé pour assigner une valeur à une clé
 += : utilisé pour ajouter la valeur à une suite de valeurs déjà assigné à la clé
 
+%n : représente le numéro kernel ex : sdb1 -> 1
+%k : nom kernel ex : sdb1 
+%c : permet de récupérer la sortie de PROGRAM
+
 ACTION : représente l'action du périphérique (connexion avec add et déconnexion avec remove) ex : ACTION=="add"
 DEVPATH : représente le chemin absolu d'accès au périphérique ex : DEVPATH=="/devices/pci0000:00/0000:00:12.0/usb1/1-1/1-1.3/1-1.3:1.0/net/usb0"
 KERNEL : représente le nom du périphérique ex : KERNEL=="sd[b-z][0-9]"
@@ -122,9 +126,7 @@ RUN : permet d'exécuter un script ou une commande ex : RUN+="/home/user/Desktop
 ...
 https://linux.die.net/man/8/udev
 
-%n : représente le numéro kernel ex : sdb1 -> 1
-%k : nom kernel ex : sdb1 
-%c : permet de récupérer la sortie de PROGRAM
+
 
 ### Tester ses règles
 
