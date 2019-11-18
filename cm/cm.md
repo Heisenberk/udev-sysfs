@@ -51,8 +51,6 @@ SEQNUM : un numéro croissant pour ordonner les événements,
 SUBSYSTEM : Le sous-système noyau ayant causé l’événement, 
 DEVPATH : Le fichier dans /sys correspondant au périphérique. 
 
-
-
 ### sysfs
 
 * Sysfs est un système de fichier virtuel, c'est à dire couche d'abstraction au dessus du système de fichier physique
@@ -111,7 +109,8 @@ Les règles permettent d'automatiser un certain nombre de taches en fonction des
 += : utilisé pour ajouter la valeur à une suite de valeurs déjà assigné à la clé
 
 ACTION : représente l'action du périphérique (connexion avec add et déconnexion avec remove) ex : ACTION=="add"
-DEVPATH : représente le chemin absolu d'accès au périphérique ex : DEVPATH=="/devices/pci0000:00/0000:00:12.0/usb1/1-1/1-1.3/1-1.3:1.0/net/usb0"
+DEVPATH : représente le chemin absolu d'accès au périphérique,  le chemin de l'entrée correspondant au périphérique dans /sys/ 
+ex : DEVPATH=="/devices/pci0000:00/0000:00:12.0/usb1/1-1/1-1.3/1-1.3:1.0/net/usb0"
 KERNEL : représente le nom du périphérique ex : KERNEL=="sd[b-z][0-9]"
 NAME : représente le nom du noeud du périphérique
 SYMLINK : représente le lien symbolique du noeud (il peut y avoir plusieurs lien symbolique par noeud)
@@ -119,6 +118,7 @@ SUBSYSTEM : représente ke sous-système du périphérique ex : SUBSYSTEM=="usb"
 DRIVER : représente le nom du pilote du périphérique
 ATTR{filename} : représente l'attribut filename trouvé par sysfs lors de la connexion du périphérique.
 RUN : permet d'exécuter un script ou une commande ex : RUN+="/home/user/Desktop/test.sh" A noter que le script sera exécuté en sudo.
+KERNELS, SUBSYSTEMS et ATTRS{attribut} sont des variantes qui vont chercher à faire correspondre les différentes options sur un des périphériques parents du périphérique actuel
 ...
 https://linux.die.net/man/8/udev
 
@@ -126,12 +126,18 @@ https://linux.die.net/man/8/udev
 %k : nom kernel ex : sdb1 
 %c : permet de récupérer la sortie de PROGRAM
 
+----------------------------------------------------------------------------------------------------------------------------------
+
 ### Tester ses règles
 
 Pour visualiser quels scripts ont été lancés à la connexion d'un périphérique, il est possible d'utiliser la commande suivante : 
 udevadm test -a add <fichier sysfs> ex : udevadm test /sys/block/sdb
 
-### Exemples concrets 
+### Exemple concret
+
+KERNEL=="sdb[0-9]", ACTION=="add", RUN+="/usr/bin/program.sh" : va détecter la connexion d'un disque dur externe et va lancer le script program.sh
+KERNEL=="mice", ACTION=="add", NAME="souris" : va détecter la souris à sa connexion et va créer un unique node dans dev/souris
+KERNEL=="hdc", ACTION=="add", SYMLINK+="dev/cdrom" : va détecter le CD-ROM et va créer un lien symbolique dev/cdrom et qui pointera vers dev/hdc
 
 ## Administration
 
@@ -139,14 +145,14 @@ udevadm test -a add <fichier sysfs> ex : udevadm test /sys/block/sdb
 
 Un log (ou logging) est un fichier permettant de stocker un
 historique des événements sur une machine. C'est donc un journal
-de bord qui est utilisée dans l'administration systeme pour garder
-une trace de ce qui s'est passée (pas forcement des incidents).
+de bord qui est utilisée dans l'administration système pour garder
+une trace de ce qui s'est passée (pas forcement des incidents).
 
 Informations utiles pour les logs
- Date et heure de l'action
- Identification de l'action
- Auteur de l'action (dans l'idéal)
- Identification de l'outil permettant d'eectuer l'action
+- Date et heure de l'action
+- Identification de l'action
+- Auteur de l'action (dans l'idéal)
+- Identification de l'outil permettant d'eectuer l'action
 
 ### udev et les logs
 
@@ -158,8 +164,10 @@ l'action (connexion ou déconnexion) et le périphérique.
 
 ### Exemple concret
 
-
-Exemple sur un antivirus qui vérifie le contenu de la clé
-Exemple qui change le proprietaire de la clé USB
+- Exercice de création de logs qui va détecter les différentes connexions et déconnexions de clés USB, ainsi que le montage/démontage
+de nouvelles partitions sur le disque dur (exercice 2).
+- Exercice qui va créer un nouveau point de montage d'une clé USB et la démonter à sa déconnexion (exercice 3).
+- Exercice qui va réaliser un backup sur une clé particulière (en fonction du numéro de série) (exercice 4).
+- Exemple d'exercice d'administration qui va faire une analyse anti-virus automatique du contenu de la clé USB qui vient d'être connectée.
 
 
