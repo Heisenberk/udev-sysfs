@@ -42,8 +42,10 @@
 		Tout élément dans un OS Linux est représenté par un fichier. De cette manière, les périphériques sont stockés sous forme de fichiers dans le dossier /dev.
 		Ces fichiers vont donc permettre l’accès aux périphériques et sont appelés device nodes. 
 	\end{block}
+\end{frame}
+\begin{frame}
     \begin{block}{Device Node}
-    	Un device node est un point d’entrée vers le noyau caractérisé par un type (bloc ou char) et deux nombres: le major et le minor. Cela définit de façon unique quel périphérique matériel est accédé via ce fichier. 
+    	Un device node est un point d’entrée vers le noyau caractérisé par un type (bloc ou char) et deux nombres: le major et le minor. Cela définit de façon unique quel périphérique matériel est accédé via ce fichier. Le majeur permet au noyau de savoir quel driver doit gérer le périphérique et le mineur permet au driver de savoir quel périphérique parmi ceux qu’il gère est utilisé. 
     \end{block}
 	\begin{exampleblock}{ls -l /dev} 
 		 Permet de voir les différents node devices de la machine.
@@ -55,7 +57,7 @@
 \subsection{makedev}
 \begin{frame}
 \begin{block}{Qu'est ce que makedev?} 
-	Dans les premières versions de Linux, les numéros de major et minor sont codés dans le noyau. Pour pouvoir modifier ces numéros, il fallait modifier le script MAKEDEV, ce qui était très contraignant en cas d'erreur. De plus, l'espace de valeurs possibles pour les numéros major et minor était trop petit. 
+	Dans les premières versions de Linux, les numéros de major et minor sont codés dans le noyau. De plus, l'espace de valeurs possibles pour les numéros major et minor était trop petit. 
 	Il fallait donc trouver une autre solution pour les versions suivantes de Linux.
 \end{block}
 \end{frame}
@@ -72,10 +74,12 @@
 \subsection{udev}
 
 \begin{frame}
-\begin{block}{Définition} 
+\begin{block}{udev} 
 	udev est un gestionnaire de périphériques du dossier /dev. Il va créer des nœuds dynamiquement pour les périphériques connectés au système. 
 	Udev détecte lorsqu'un nouveau périphérique est connecté. 
 \end{block}
+\end{frame}
+\begin{frame}
 \begin{exampleblock}{udevadm info -a -p} 
 	
 	\tiny{\$  udevadm monitor -k -p
@@ -195,7 +199,7 @@ Les règles permettent d'automatiser un certain nombre de taches en fonction des
 	\begin{itemize}
 		
 		\setbeamertemplate{itemize item}[circle]
-		\item \%n : représente le numéro kernel ex : sdb1 -> 1
+		\item \%n : représente le numéro kernel ex : sdb1 donne 1
 		\item \%k : nom kernel ex : sdb1 
 		\item \%c : permet de récupérer la sortie de PROGRAM
 	\end{itemize}
