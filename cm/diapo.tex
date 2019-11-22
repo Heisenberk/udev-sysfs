@@ -40,12 +40,12 @@
  \begin{frame}
 	\begin{block}{Périphérique} 
 		Tout élément dans un OS Linux est représenté par un fichier. De cette manière, les périphériques sont stockés sous forme de fichiers dans le dossier /dev.
-		Ces fichiers vont donc permettre l’accès aux périphériques et sont appelés device nodes. 
+		Ces fichiers vont donc permettre l’accès aux périphériques et sont appelés device nodes. 
 	\end{block}
 \end{frame}
 \begin{frame}
     \begin{block}{Device Node}
-    	Un device node est un point d’entrée vers le noyau caractérisé par un type (bloc ou char) et deux nombres: le major et le minor. Cela définit de façon unique quel périphérique matériel est accédé via ce fichier. Le majeur permet au noyau de savoir quel driver doit gérer le périphérique et le mineur permet au driver de savoir quel périphérique parmi ceux qu’il gère est utilisé. 
+    	Un device node est un point d’entrée vers le noyau caractérisé par un type (bloc ou char) et deux nombres: le major et le minor. Cela définit de façon unique quel périphérique matériel est accédé via ce fichier. Le majeur permet au noyau de savoir quel driver doit gérer le périphérique et le mineur permet au driver de savoir quel périphérique parmi ceux qu’il gère est utilisé. 
     \end{block}
 	\begin{exampleblock}{ls -l /dev} 
 		 Permet de voir les différents node devices de la machine.
@@ -79,8 +79,31 @@
 	Udev détecte lorsqu'un nouveau périphérique est connecté. 
 \end{block}
 \end{frame}
+
 \begin{frame}
-\begin{exampleblock}{udevadm info -a -p} 
+\begin{block}{udev}
+	udev est charger de faire le lien entre les informations de sysfs et les règles de l'utilisateur.
+	Pour manipuler et connaitre le traitement du périphérique défini par l'utilisateur, udev se base sur plusieurs propriétés.
+	 
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Interprétation des propriétés importantes} 
+Les propriétés dépendent du type exact de périphérique mais certaines propriétés sont toujours présentes:
+\begin{itemize}
+	\setbeamertemplate{itemize item}[circle]
+	\item ACTION : Le type d’événement à traiter
+	\item MAJOR, MINOR : Les numéro majeur et mineur du périphérique concerné. 
+    \item SEQNUM : un numéro croissant pour ordonner les événements, 
+    \item SUBSYSTEM : Le sous-système noyau ayant causé l’événement, 
+	\item DEVPATH : Le fichier dans /sys correspondant au périphérique. 
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{udevadm monitor -k -p} 
 	
 	\tiny{\$  udevadm monitor -k -p
 		
@@ -105,18 +128,36 @@
 \end{frame}
 
 \begin{frame}
-\begin{exampleblock}{Interprétation des propriétés importantes} 
-Les propriétés dépendent du type exact de périphérique mais certaines propriétés sont toujours présentes:
-\begin{itemize}
-	\setbeamertemplate{itemize item}[circle]
-	\item ACTION : Le type d’événement à traiter
-	\item MAJOR, MINOR : Les numéro majeur et mineur du périphérique concerné. 
-    \item SEQNUM : un numéro croissant pour ordonner les événements, 
-    \item SUBSYSTEM : Le sous-système noyau ayant causé l’événement, 
-	\item DEVPATH : Le fichier dans /sys correspondant au périphérique. 
-\end{itemize}
+\begin{exampleblock}{udevadm info -a -p} 
+
+\tiny{\$  udevadm info -a -p /dev/sdb\\
+...\\
+looking at device '/devices/pci0000:00/0000:00:06.0/0000:07:00.1/host4/rport-4:0-5/target4:0:0/4:0:0:5/block/sdd':
+KERNEL==sdb\\    
+    SUBSYSTEM==block\\
+    DRIVER==\\
+
+	
+  ATTR\{range\}==16\\
+ ATTR\{ ext\_range\} ==256\\
+    ATTR\{removable\} ==0\\
+    ATTR\{ro\} ==0\\
+    ATTR\{size\} ==35163230208\\
+    ATTR\{alignment\_offset\} ==0\\
+    ATTR\{discard\_alignment\} ==0\\
+    ATTR\{capability\} ==52\\
+...
+}
+
+		
+		
 \end{exampleblock}
+ 
 \end{frame}
+
+
+
+
 
 
 \subsection{sysfs}
@@ -245,7 +286,6 @@ Les règles permettent d'automatiser un certain nombre de taches en fonction des
 	\begin{itemize}
 		
 		\setbeamertemplate{itemize item}[circle]
-		\item KERNEL=="sdb[0-9]", ACTION=="add", RUN+="/usr/bin/program.sh" : va détecter la connexion d'un disque dur externe et va lancer le script program.sh
 		\item KERNEL=="sdb[0-9]", ACTION=="add", RUN+="/usr/bin/program.sh" : va détecter la connexion d'un disque dur externe et va lancer le script program.sh
 		\item KERNEL=="mice", ACTION=="add", NAME="souris" : va détecter la souris à sa connexion et va créer un unique node dans dev/souris
 		\item KERNEL=="hdc", ACTION=="add", SYMLINK+="dev/cdrom" : va détecter le CD-ROM et va créer un lien symbolique dev/cdrom et qui pointera vers dev/hdc

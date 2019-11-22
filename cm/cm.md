@@ -29,7 +29,7 @@ Il fallait donc trouver une autre solution pour les versions suivantes de Linux.
 
 Devfs est un système de fichiers contenant les device nodes et dont les noeuds sont créés par les pilotes des périphériques lors de leur détection. Cependant, il y avait toujours certaines limites (espace de numéros trop petit notamment).
 
-
+----------------------------------------------------------------------------------------------------------------------------------
 
 ## Définitions de udev et sysfs
 
@@ -39,8 +39,8 @@ udev est un gestionnaire de périphériques du dossier /dev. Il va créer des n�
 
 Udev détecte lorsqu'un nouveau périphérique est connecté. On peut le voir avec udevadm monitor -k avant de connecter une clé USB par exemple. De même lorsqu'on l'a déconnecté. 
 
-----------------------------------------------------------------------------------------------------------------------------------
 
+Udev est un deamon
 Par exemple, en utilisant la commande ```udevadm monitor -k```, cela permet de visualiser les détections des périphériques faites par udev. 
 On peut également afficher certaines propriétés avec ```udevadm monitor -k -p```
 
